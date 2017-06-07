@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
+import { Http,Headers, RequestOptions } from '@angular/http';
+
 
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/do';
@@ -9,7 +10,7 @@ import { Observable } from 'rxjs/Rx';
 @Injectable()
 export class UsersService {
 
-  private url: string = "http://jsonplaceholder.typicode.com/users";
+  private url: string = "http://localhost:5000/api/user/";
 
   constructor(private http: Http) { }
 
@@ -24,8 +25,11 @@ export class UsersService {
   }
 
   addUser(user){
-    return this.http.post(this.url, JSON.stringify(user))
-      .map(res => res.json());
+     let headers = new Headers({ 'Content-Type': 'application/json' });
+         headers.append('Access-Control-Allow-Origin','*');
+    let options = new RequestOptions({ headers: headers });
+    return this.http.post(this.url, JSON.stringify(user),options)
+      .map(res => res.status);
   }
 
   updateUser(user){
